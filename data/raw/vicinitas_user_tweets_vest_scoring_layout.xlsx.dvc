@@ -1,6 +1,6 @@
-md5: 33bd02f60b709379b18c59741429a36f
+md5: 94df8fbb874e370bfc0657f44d7804a2
 outs:
-- md5: 406de473748cebe9cc0737170a54aaf4
+- md5: a4d5b97568012ef8b69a907fb38d49ce
   path: vicinitas_user_tweets_vest_scoring_layout.xlsx
   cache: true
   metric: false
