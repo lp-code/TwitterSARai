@@ -7,17 +7,17 @@ from dotenv import find_dotenv, load_dotenv
 import numpy as np
 import pandas as pd
 
-from .data_utils import split_into_tags_and_doc
+from data_utils import split_into_tags_and_doc
 
 
 _project_dir = Path(__file__).resolve().parents[2]
-_data_dir = _project_dir.joinpath("data")
+_data_dir = _project_dir / "data"
 
 
 @click.command()
 @click.argument(
     'input_filepath',
-    default=_data_dir.joinpath("raw", "vicinitas_user_tweets_vest_scoring_layout.xlsx"),
+    default=_data_dir / "raw" / "vicinitas_user_tweets_vest_scoring_layout.xlsx",
     type=click.Path(exists=True)
 )
 @click.argument(
@@ -43,7 +43,11 @@ def main(input_filepath, output_filepath):
     df_xlsx = df_xlsx.astype({"i_man": np.int8})
     df_xlsx["tags"], df_xlsx["doc"] = zip(*df_xlsx["Text"].map(split_into_tags_and_doc))
     df_xlsx.drop(columns="Text", inplace=True)
+
+    output_filepath.parents[0].mkdir(parents=True, exist_ok=True)
     df_xlsx.to_csv(output_filepath, index=False)
+
+    logger.info('Finished making final data set from raw data')
 
 
 if __name__ == '__main__':
