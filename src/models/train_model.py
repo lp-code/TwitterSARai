@@ -6,6 +6,7 @@ import logging
 import sys
 from pathlib import Path
 
+import joblib
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC
@@ -80,6 +81,11 @@ def main(input_filepath, output_filepath):
     # import matplotlib.pyplot as plt
     # plt.matshow(cm)
     # plt.show()
+
+    joblib.dump(
+        grid_search,
+        _project_dir / "models" / "model.joblib"
+    )
 
 if __name__ == "__main__":
     # NOTE: we put the following in a 'if __name__ == "__main__"' protected

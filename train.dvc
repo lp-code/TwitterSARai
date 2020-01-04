@@ -1,0 +1,13 @@
+md5: 88a1efdfd10429c3d6345b273cae3456
+cmd: python src\models\train_model.py
+deps:
+- md5: 46e58fe6f7607840fdb68d5f8fefa6c8
+  path: src/models/train_model.py
+- md5: 42cfcd15f515f9cc4f3d0033b76234a7.dir
+  path: data/processed
+outs:
+- md5: e7c79153ec064964aa079d1a9333e962
+  path: models/model.joblib
+  cache: true
+  metric: false
+  persist: false
