@@ -1,3 +1,4 @@
+azure-functions==1.0.7
 beautifulsoup4==4.8.2
 Brotli==1.0.7
 cchardet==2.1.5
