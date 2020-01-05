@@ -1,5 +1,0 @@
-cryptography==2.8
-scikit-learn==0.22
-scipy==1.4.1
-six==1.13.0
-sklearn==0.0
