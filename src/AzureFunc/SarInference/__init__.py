@@ -5,43 +5,50 @@ from pathlib import Path
 
 import azure.functions as func
 
+from .data_utils import split_into_tags_and_doc
+
+
+def logged_error_response(msg: str, status_code: int) -> func.HttpResponse:
+    logging.error(msg)
+    return func.HttpResponse(msg, status_code=status_code)
+
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('SarInference function processing request.')
+    logging.info("SarInference function processing request.")
 
     try:
         req_body = req.get_json()
     except ValueError:
-        pass
+        tweet = None
     else:
-        tweet = req_body.get('tweet')
+        tweet = req_body.get("tweet")
 
     try:
         p = Path(__file__).resolve().parents[0] / "model.joblib"
         model = joblib.load(p)
-    except:
-        return func.HttpResponse(
-            f"No model found at {str(p)}",
-            status_code=500
+    except Exception as e:
+        return logged_error_response(
+            f"No model found at {str(p)}: " + repr(e), status_code=500
         )
 
     if tweet:
-        logging.info('Tweet text: %s', tweet)
+        logging.info(f"Tweet text: {tweet}")
 
         try:
-            res = do_inference()
-        except:
-            return func.HttpResponse(
-                f"Error during inference.",
-                status_code=500
+            tags, txt = split_into_tags_and_doc(tweet)
+            res_array = model.predict([txt])
+        except Exception as e:
+            return logged_error_response(
+                "Error during inference: " + repr(e), status_code=500
             )
 
+        logging.info(f"Inference successful, result: class={res_array[0]}")
         return func.HttpResponse(
-            body=json.dumps(res),
-            status_code=200
+            body=json.dumps({"class": int(res_array[0])}),
+            mimetype="application/json",
+            status_code=200,
         )
     else:
-        return func.HttpResponse(
-             "No tweet text passed in the request body.",
-             status_code=400
+        return logged_error_response(
+            "No tweet text passed in the request body.", status_code=400
         )
