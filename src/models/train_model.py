@@ -2,6 +2,7 @@
 Build a model to filter tweets that have been flagged as potentially
 interesting by the keyword matching algorithm.
 """
+import json
 import logging
 import sys
 from pathlib import Path
@@ -20,6 +21,21 @@ import click
 
 _project_dir = Path(__file__).resolve().parents[2]
 _data_dir = _project_dir / "data"
+
+def print_confusion_matrix(y_true, y_pred):
+    print(pd.crosstab(y_true, y_pred, rownames=['Actual'], colnames=['Predicted'], margins=True))
+
+def print_model_metrics(y_actual, y_predicted):
+    print(metrics.classification_report(y_actual, y_predicted,
+                                        target_names=["0", "1"]))
+
+    print_confusion_matrix(y_actual, y_predicted)
+
+def write_metrics_file(y_actual, y_predicted):
+    metrics_data = dict(f1=metrics.f1_score(y_actual, y_predicted))
+    with open(_project_dir / "metrics.json", "w") as jsonfile:
+        json.dump(metrics_data, jsonfile)
+
 
 
 @click.command()
@@ -48,13 +64,13 @@ def main(input_filepath, output_filepath):
         ('clf', LinearSVC(C=1000)),
     ])
 
-    # TASK: Build a grid search to find out whether unigrams or bigrams are
+    # Build a grid search to find out whether unigrams or bigrams are
     # more useful.
     # Fit the pipeline on the training set using grid search for the parameters
     parameters = {
         'vect__ngram_range': [(1, 1), (1, 2)],
     }
-    grid_search = GridSearchCV(pipeline, parameters, n_jobs=-1)
+    grid_search = GridSearchCV(pipeline, parameters, scoring="f1", n_jobs=-1)
     grid_search.fit(docs_train, y_train)
 
     # TASK: print the mean and std for each candidate along with the parameter
@@ -66,26 +82,21 @@ def main(input_filepath, output_filepath):
                     grid_search.cv_results_['mean_test_score'][i],
                     grid_search.cv_results_['std_test_score'][i]))
 
-    # TASK: Predict the outcome on the testing set and store it in a variable
-    # named y_predicted
+    # Predict the outcome on the testing set using the best model among those
+    # with the different parameters.
     y_predicted = grid_search.predict(docs_test)
 
-    # Print the classification report
-    print(metrics.classification_report(y_test, y_predicted,
-                                        target_names=["0", "1"]))
+    print_model_metrics(y_test, y_predicted)
 
-    # Print and plot the confusion matrix
-    cm = metrics.confusion_matrix(y_test, y_predicted)
-    print(cm)
+    # The metrics file is version-controlled and a dvc target.
+    write_metrics_file(y_test, y_predicted)
 
-    # import matplotlib.pyplot as plt
-    # plt.matshow(cm)
-    # plt.show()
-
+    # Finally, we dump the model; it is used by the inference function in Azure.
     joblib.dump(
         grid_search,
         _project_dir / "models" / "model.joblib"
     )
+
 
 if __name__ == "__main__":
     # NOTE: we put the following in a 'if __name__ == "__main__"' protected
