@@ -44,7 +44,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         logging.info(f"Inference successful, result: class={res_array[0]}")
         return func.HttpResponse(
-            body=json.dumps({"class": int(res_array[0])}),
+            body=json.dumps(dict(
+                tags=tags.split("|"),
+                text=txt,
+                label=int(res_array[0]),
+                original=tweet,
+            )),
             mimetype="application/json",
             status_code=200,
         )
