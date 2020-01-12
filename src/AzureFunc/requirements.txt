@@ -1,2 +1,2 @@
-azure-functions==1.0.7
 joblib==0.14.1
+scikit-learn==0.22

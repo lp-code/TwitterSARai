@@ -8,6 +8,9 @@ import azure.functions as func
 from .data_utils import split_into_tags_and_doc
 
 
+VERSION = "2.0.0"
+
+
 def logged_error_response(msg: str, status_code: int) -> func.HttpResponse:
     logging.error(msg)
     return func.HttpResponse(msg, status_code=status_code)
@@ -44,12 +47,15 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         logging.info(f"Inference successful, result: class={res_array[0]}")
         return func.HttpResponse(
-            body=json.dumps(dict(
-                tags=tags.split("|"),
-                text=txt,
-                label=int(res_array[0]),
-                original=tweet,
-            )),
+            body=json.dumps(
+                dict(
+                    tags=[] if not tags else tags.split("|"),
+                    text=txt,
+                    label=int(res_array[0]),
+                    original=tweet,
+                    version=VERSION,
+                )
+            ),
             mimetype="application/json",
             status_code=200,
         )
