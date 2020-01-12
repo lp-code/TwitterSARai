@@ -9,14 +9,46 @@ from pathlib import Path
 
 import joblib
 import pandas as pd
+from sklearn.base import BaseEstimator
 from sklearn.feature_extraction.text import TfidfVectorizer
+
 from sklearn.svm import LinearSVC
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import SGDClassifier
+
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 
 import click
+
+
+class ClfSwitcher(BaseEstimator):
+    """
+    Code reused from:
+    https://stackoverflow.com/questions/48507651/multiple-classification-models-in-a-scikit-pipeline-python
+    """
+
+    def __init__(self, estimator=SGDClassifier()):
+        """
+        A Custom BaseEstimator that can switch between classifiers.
+        :param estimator: sklearn object - The classifier
+        """
+        self.estimator = estimator
+
+    def fit(self, X, y=None, **kwargs):
+        self.estimator.fit(X, y, **kwargs)
+        return self
+
+    def predict(self, X, y=None):
+        return self.estimator.predict(X)
+
+    def predict_proba(self, X):
+        return self.estimator.predict_proba(X)
+
+    def score(self, X, y):
+        return self.estimator.score(X, y)
 
 
 _project_dir = Path(__file__).resolve().parents[2]
@@ -61,14 +93,17 @@ def main(input_filepath, output_filepath):
     # that are too rare or too frequent
     pipeline = Pipeline([
         ('vect', TfidfVectorizer(min_df=3, max_df=0.95)),
-        ('clf', LinearSVC(C=1000)),
+        ('clf', ClfSwitcher()),
     ])
+
+
 
     # Build a grid search to find out whether unigrams or bigrams are
     # more useful.
     # Fit the pipeline on the training set using grid search for the parameters
     parameters = {
         'vect__ngram_range': [(1, 1), (1, 2)],
+        'clf__estimator': [LinearSVC(C=1000)],
     }
     grid_search = GridSearchCV(pipeline, parameters, scoring="f1", n_jobs=-1)
     grid_search.fit(docs_train, y_train)
