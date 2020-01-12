@@ -1,6 +1,6 @@
 import pytest
 
-from ..data.data_utils import *
+from ..data.data_utils import split_into_tags_and_doc
 
 @pytest.mark.parametrize(
     "tweet, expected",
@@ -25,26 +25,3 @@ from ..data.data_utils import *
 )
 def test_split_into_tags_and_doc(tweet, expected):
     assert split_into_tags_and_doc(tweet) == expected
-
-
-txt1 = "Har du vært der? Ja, 33 ganger i fjor, og mange ganger før det. Tror du det?"
-
-@pytest.mark.parametrize(
-    "rm_punctuation, rm_stopwords, stem, txt, expected",
-    [
-        (True, True, True, txt1, "gang fjor gang tror"),
-        (False, True, True, txt1, "? , 33 gang fjor , gang . tror ?"),
-        (True, False, True, txt1, "har du vært der ja gang i fjor og mang gang før det tror du det"),
-        (True, True, False, txt1, "ganger fjor ganger tror"),
-        (False, False, True, txt1, "har du vært der ? ja , 33 gang i fjor , og mang gang før det . tror du det ?"),
-        (False, True, False, txt1, "? , 33 ganger fjor , ganger . tror ?"),
-        (True, False, False, txt1, "har du vært der ja ganger i fjor og mange ganger før det tror du det"),
-        (False, False, False, txt1, "har du vært der ? ja , 33 ganger i fjor , og mange ganger før det . tror du det ?"),
-    ]
-)
-def test_preprocess_text(rm_punctuation, rm_stopwords, stem, txt, expected):
-
-    assert preprocess_text(txt,
-                           remove_punctuation=rm_punctuation,
-                           remove_stopwords=rm_stopwords,
-                           stem=stem) == expected
