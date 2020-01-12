@@ -2,6 +2,7 @@ import string
 
 from nltk import word_tokenize
 from nltk.stem import SnowballStemmer
+from sklearn.base import BaseEstimator
 
 
 # The following list of stopwords was retrieved from nltk.corpus.stopwords;
@@ -50,7 +51,7 @@ def preprocess_text(
     return " ".join(tokens)
 
 
-class TextPreprocessor:
+class TextPreprocessor(BaseEstimator):
     def __init__(self, remove_punctuation=True, remove_stopwords=True, stem=True):
         self.remove_punctuation = remove_punctuation
         self.remove_stopwords = remove_stopwords
@@ -59,7 +60,7 @@ class TextPreprocessor:
     def fit(self, X, y=None, **kwargs):
         return self
 
-    def transform(self, X, y=None):
+    def transform(self, X):
         X_copy = X.copy()
         for i, s in X_copy.items():
             X_copy[i] = preprocess_text(
@@ -69,4 +70,4 @@ class TextPreprocessor:
                 self.stem,
             )
 
-        return X_copy, y
+        return X_copy
