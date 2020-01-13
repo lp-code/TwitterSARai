@@ -103,25 +103,23 @@ def main(input_filepath, output_filepath):
 
     # Fit the pipeline on the training set using grid search for the parameters
     parameters = {
-        "prep__remove_punctuation": [True],
-        "prep__remove_stopwords": [True, False],
-        "prep__stem": [True, False],
+        "prep__remove_punctuation": [True],  # all winning ones have this
+        "prep__remove_stopwords": [True],  # all winning ones have this
+        "prep__stem": [False],  # all winning ones have this
         "vect": [CountVectorizer(), TfidfVectorizer(max_df=0.95)],
         "vect__ngram_range": [(1, 1), (1, 2)],  # unigrams or bigrams
-        "vect__min_df": [1, 3, 6],
+        "vect__min_df": [1],  # all winning ones have this
         "clf__estimator": [
             LinearSVC(C=1000),
-            MultinomialNB(alpha=0.01),
-            MultinomialNB(alpha=0.1),
-            MultinomialNB(alpha=1),
-            BernoulliNB(alpha=0.01),
-            BernoulliNB(alpha=0.1),
-            BernoulliNB(alpha=1),
-            ComplementNB(alpha=0.01),
+            # MultinomialNB(alpha=0.01),
+            # MultinomialNB(alpha=0.1),
+            MultinomialNB(alpha=1),  # winning ones mostly have this
+            # BernoulliNB(alpha=xxx), none of these were successful
             ComplementNB(alpha=0.1),
             ComplementNB(alpha=1),
+            ComplementNB(alpha=10),  # new
             SGDClassifier(alpha=1e-3, random_state=42, max_iter = 50),
-            SGDClassifier(alpha=1e-4, random_state=42, max_iter=50),
+            SGDClassifier(alpha=1e-3, random_state=42, max_iter=150),
         ],
     }
     grid_search = GridSearchCV(pipeline, parameters, scoring="f1", n_jobs=-1, verbose=1)
@@ -153,7 +151,7 @@ def main(input_filepath, output_filepath):
 
     # The following file can be unpickled and the result used to create a DataFrame.
     try:
-        with open(_project_dir / "grid_search_results.pck", "wb") as f:
+        with open(_project_dir / "grid_search_results2.pck", "wb") as f:
             pickle.dump(grid_search.cv_results_, f)
     except PermissionError:
         pass

@@ -85,3 +85,5 @@ target/
 
 # Mypy cache
 .mypy_cache/
+
+grid_search_results*.pck
