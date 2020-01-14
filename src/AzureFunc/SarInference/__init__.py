@@ -8,12 +8,12 @@ import azure.functions as func
 from .data_utils import split_into_tags_and_doc
 
 
-VERSION = "2.0.0"
+VERSION = "20200114.0"
 
 
 def logged_error_response(msg: str, status_code: int) -> func.HttpResponse:
     logging.error(msg)
-    return func.HttpResponse(msg, status_code=status_code)
+    return func.HttpResponse(msg, status_code=status_code, mimetype="text/plain")
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -34,7 +34,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             f"No model found at {str(p)}: " + repr(e), status_code=500
         )
 
-    if tweet:
+    if not tweet:
+        return logged_error_response(
+            "No tweet text passed in the request body.", status_code=400
+        )
+    else:
         logging.info(f"Tweet text: {tweet}")
 
         try:
@@ -52,14 +56,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                     tags=[] if not tags else tags.split("|"),
                     text=txt,
                     label=int(res_array[0]),
+                    score=1.0,
                     original=tweet,
                     version=VERSION,
                 )
             ),
             mimetype="application/json",
             status_code=200,
-        )
-    else:
-        return logged_error_response(
-            "No tweet text passed in the request body.", status_code=400
         )
