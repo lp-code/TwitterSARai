@@ -8,6 +8,7 @@ param (
 # zip file when deployed to Azure.
 Copy-Item "..\..\models\model.joblib" -Destination "SarInference" -Force
 Copy-Item "..\data\data_utils.py" -Destination "SarInference" -Force
+Copy-Item "..\models\model_utils.py" -Destination "SarInference" -Force
 
 if ($target -eq "localhost") {
     func host start
@@ -19,3 +20,4 @@ else {
 # Remove the copied items again.
 Remove-Item "SarInference\model.joblib"
 Remove-Item "SarInference\data_utils.py"
+Remove-Item "SarInference\model_utils.py"
