@@ -1,6 +1,8 @@
 import joblib
 import json
 import logging
+import sys
+import traceback
 from pathlib import Path
 
 import azure.functions as func
@@ -8,7 +10,7 @@ import azure.functions as func
 from .data_utils import split_into_tags_and_doc
 
 
-VERSION = "20200114.0"
+VERSION = "20200116.0"
 
 
 def logged_error_response(msg: str, status_code: int) -> func.HttpResponse:
@@ -27,7 +29,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         tweet = req_body.get("tweet")
 
     try:
-        p = Path(__file__).resolve().parents[0] / "model.joblib"
+        # Have to add the current directory to the path so that the modules
+        # copied to the current directory during deployment are found.
+        current_dir = Path(__file__).resolve().parents[0]
+        sys.path.append(str(current_dir))
+
+        p = current_dir / "model.joblib"
         model = joblib.load(p)
     except Exception as e:
         return logged_error_response(
@@ -46,7 +53,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             res_array = model.predict([txt])
         except Exception as e:
             return logged_error_response(
-                "Error during inference: " + repr(e), status_code=500
+                "Error during inference: " + repr(e) + traceback.format_exc(), status_code=500
             )
 
         logging.info(f"Inference successful, result: class={res_array[0]}")
