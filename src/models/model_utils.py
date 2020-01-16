@@ -3,6 +3,7 @@ import string
 from nltk import word_tokenize
 from nltk.stem import SnowballStemmer
 from sklearn.base import BaseEstimator
+from sklearn.linear_model import SGDClassifier
 
 
 # The following list of stopwords was retrieved from nltk.corpus.stopwords;
@@ -62,7 +63,7 @@ class TextPreprocessor(BaseEstimator):
 
     def transform(self, X):
         X_copy = X.copy()
-        for i, s in X_copy.items():
+        for i, s in (X_copy.items() if hasattr(X_copy, 'items') else enumerate(X_copy)):
             X_copy[i] = preprocess_text(
                 s,
                 self.remove_punctuation,
@@ -71,3 +72,30 @@ class TextPreprocessor(BaseEstimator):
             )
 
         return X_copy
+
+
+class ClfSwitcher(BaseEstimator):
+    """
+    Code reused from:
+    https://stackoverflow.com/questions/48507651/multiple-classification-models-in-a-scikit-pipeline-python
+    """
+
+    def __init__(self, estimator=SGDClassifier()):
+        """
+        A Custom BaseEstimator that can switch between classifiers.
+        :param estimator: sklearn object - The classifier
+        """
+        self.estimator = estimator
+
+    def fit(self, X, y=None, **kwargs):
+        self.estimator.fit(X, y, **kwargs)
+        return self
+
+    def predict(self, X, y=None):
+        return self.estimator.predict(X)
+
+    def predict_proba(self, X):
+        return self.estimator.predict_proba(X)
+
+    def score(self, X, y):
+        return self.estimator.score(X, y)
