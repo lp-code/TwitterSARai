@@ -44,4 +44,5 @@ __pycache__/
 
 # The following files are copied into the Azure function's directory before deployment:
 SarInference/data_utils.py
+SarInference/model_utils.py
 SarInference/model.joblib
