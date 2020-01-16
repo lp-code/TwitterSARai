@@ -122,6 +122,11 @@ def main(input_filepath, output_filepath):
     print(f"Best estimator: {grid_search.best_estimator_}")
     pprint(grid_search.best_params_)
 
+    print("\n\n   WRONG PREDICTIONS")
+    for predicted, actual, txt in zip(y_predicted, y_test.to_numpy(), docs_test.to_numpy()):
+        if actual != predicted:
+            print(f"Actual: {actual}, predicted: {predicted}, {txt}")
+
     # The following file can be unpickled and the result used to create a DataFrame.
     try:
         with open(_project_dir / "grid_search_results2.pck", "wb") as f:
