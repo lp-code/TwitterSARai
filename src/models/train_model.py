@@ -109,23 +109,24 @@ def main(input_filepath, output_filepath):
 
     # Predict the outcome on the testing set using the best model among those
     # with the different parameters.
-    y_predicted = grid_search.predict(docs_test)
+    y_test_pred = grid_search.predict(docs_test)
 
     print("BEST MODEL RESULTS:")
-    print_model_metrics(y_test, y_predicted)
+    print_model_metrics(y_test, y_test_pred)
 
     # The metrics file is version-controlled and a dvc target.
-    write_metrics_file(y_test, y_predicted)
+    write_metrics_file(y_test, y_test_pred)
 
     print(f"Best score: {grid_search.best_score_}")
     print(f"Best index: {grid_search.best_index_}")
     print(f"Best estimator: {grid_search.best_estimator_}")
     pprint(grid_search.best_params_)
 
-    print("\n\n   WRONG PREDICTIONS")
-    for predicted, actual, txt in zip(y_predicted, y_test.to_numpy(), docs_test.to_numpy()):
-        if actual != predicted:
-            print(f"Actual: {actual}, predicted: {predicted}, {txt}")
+    print("\n\n   WRONG PREDICTIONS (training data)")
+    y_train_pred = grid_search.predict(docs_train)
+    for pred, actual, txt in zip(y_train_pred, y_train.to_numpy(), docs_train.to_numpy()):
+        if actual != pred:
+            print(f"Actual: {actual}, predicted: {pred}, {txt}")
 
     # The following file can be unpickled and the result used to create a DataFrame.
     try:
