@@ -27,17 +27,20 @@ def test_preprocess_text(rm_punctuation, rm_stopwords, stem, txt, expected):
                            stem=stem) == expected
 
 
-def test_TextPreprocessor():
+@pytest.mark.parametrize("inp_type", [Series, list])
+def test_TextPreprocessor_Series(inp_type):
     # Arrange
     tp = TextPreprocessor()  # all settings at default
-    X = Series([txt1, txt2])
+    X = inp_type([txt1, txt2])
 
     # Act
-    Xt, _ = tp.transform(X)
+    Xt = tp.transform(X)
 
     # Assert
-    assert (X == Series([txt1, txt2])).all()  # unchanged
-    assert isinstance(Xt, Series)
+    assert (X == [txt1, txt2]
+            if inp_type is list
+            else (X == inp_type([txt1, txt2])).all())  # input values unchanged
+    assert isinstance(Xt, inp_type)
     assert len(Xt) == 2
     assert Xt[0] == "gang fjor gang tror"
     assert Xt[1] == "bil funn langt ifrå stjål politi søkj spor"
