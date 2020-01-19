@@ -39,7 +39,14 @@ def preprocess_text(
         punctuation = set(string.punctuation + string.digits)
         _text = "".join([ch for ch in _text if ch not in punctuation])
 
-    tokens = word_tokenize(_text)  # Returns a list of words.
+    try:
+        tokens = word_tokenize(_text, language="norwegian")  # Returns a list of words.
+    except LookupError:
+        # In the deployed function, the download has not been done when this
+        # point is hit for the first time.
+        import nltk
+        nltk.download("punkt")
+        tokens = word_tokenize(_text, language="norwegian")
 
     if remove_stopwords:
         tokens = [t for t in tokens if t not in _stopwords_no]
