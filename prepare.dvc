@@ -1,14 +1,14 @@
-md5: ecc006d95e348ff3b103bfd1dac569ae
+md5: 0583445fa976e63f9f94bff1622edf3e
 cmd: python src\data\make_dataset.py
 deps:
 - md5: d0630275f90aa5e8047da3ab62467df1
   path: src/data/make_dataset.py
 - md5: 309819fb41c9b296bdcd9266ce60e3a5
   path: src/data/data_utils.py
-- md5: dacf36946bcccb7ea9ae136a649ecc39
+- md5: e2b6126b915fbaca6fcbdc475e283556
   path: data/raw/vicinitas_user_tweets_vest_scoring_layout.xlsx
 outs:
-- md5: a76abf590c9aa3e16c5042040c9e8d31.dir
+- md5: aa4d62c754cdc7713fde57201515779f.dir
   path: data/processed
   cache: true
   metric: false
