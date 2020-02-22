@@ -87,19 +87,20 @@ class ClfSwitcher(BaseEstimator):
     https://stackoverflow.com/questions/48507651/multiple-classification-models-in-a-scikit-pipeline-python
     """
 
-    def __init__(self, estimator=SGDClassifier()):
+    def __init__(self, estimator=SGDClassifier(), threshold=0.5):
         """
         A Custom BaseEstimator that can switch between classifiers.
         :param estimator: sklearn object - The classifier
         """
         self.estimator = estimator
+        self.threshold = threshold
 
     def fit(self, X, y=None, **kwargs):
         self.estimator.fit(X, y, **kwargs)
         return self
 
     def predict(self, X, y=None):
-        return self.estimator.predict(X)
+        return (self.estimator.predict_proba(X)[:,1] >= self.threshold).astype(int)
 
     def predict_proba(self, X):
         return self.estimator.predict_proba(X)
