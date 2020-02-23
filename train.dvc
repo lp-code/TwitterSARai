@@ -1,17 +1,17 @@
-md5: 31b322c6178df3185e2fba6d4cdf9f13
+md5: c15e4010e1e0f6193c1608ad2af8976a
 cmd: python src\models\train_model.py
 deps:
-- md5: a9d01b4a74bb18efb5829a6de5c01cdc
+- md5: 1a3728433f9c6556c7efa357c899388f
   path: src/models/train_model.py
-- md5: aa4d62c754cdc7713fde57201515779f.dir
+- md5: bdf495c5db309730bc746e05a1a291c7.dir
   path: data/processed
 outs:
-- md5: 0c88432e0089010d5607d630bc1d5764
+- md5: c208228ad698505376dfae442b7ff157
   path: models/model.joblib
   cache: true
   metric: false
   persist: false
-- md5: bf8c6feea70a4669112ef909d73b4f82
+- md5: 51ef153234e81fa0d43c19bdd1c484fe
   path: metrics.json
   cache: false
   metric: true

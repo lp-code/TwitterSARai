@@ -126,7 +126,7 @@ def main(input_filepath, output_filepath):
             #SGDClassifier(alpha=1e-3, random_state=42, max_iter = 50, loss="log"),
             #SGDClassifier(alpha=1e-3, random_state=42, max_iter=150, loss="log"),
         ],
-        "clf__threshold": np.arange(0.1, 0.21, 0.02),
+        "clf__threshold": np.arange(0.03, 0.035, 0.1),
     }
     grid_search = GridSearchCV(pipeline, parameters, scoring="f1", n_jobs=-1, verbose=1)
     grid_search.fit(docs_train, y_train)
