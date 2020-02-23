@@ -1,6 +1,7 @@
 import joblib
 import json
 import logging
+import os
 import sys
 import traceback
 from pathlib import Path
@@ -11,7 +12,7 @@ from .data_utils import split_into_tags_and_doc
 
 
 VERSION = "20200222.0"
-
+THRESHOLD_DEFAULT = 0.03
 
 def logged_error_response(msg: str, status_code: int) -> func.HttpResponse:
     logging.error(msg)
@@ -48,26 +49,33 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     else:
         logging.info(f"Tweet text: {tweet}")
 
-        try:
-            tags, txt = split_into_tags_and_doc(tweet)
-            res_array = model.predict([txt])
-        except Exception as e:
-            return logged_error_response(
-                "Error during inference: " + repr(e) + traceback.format_exc(), status_code=500
-            )
+    try:
+        threshold = float(os.environ["AZTWITTERSARAI_THRESHOLD"])
+        logging.info(f"Using threshold from env: {threshold}")
+    except (KeyError, ValueError):
+        threshold = THRESHOLD_DEFAULT
+        logging.info(f"No valid threshold set in env, using default: {threshold}")
 
-        logging.info(f"Inference successful, result: class={res_array[0]}")
-        return func.HttpResponse(
-            body=json.dumps(
-                dict(
-                    tags=[] if not tags else tags.split("|"),
-                    text=txt,
-                    label=int(res_array[0]),
-                    score=1.0,
-                    original=tweet,
-                    version=VERSION,
-                )
-            ),
-            mimetype="application/json",
-            status_code=200,
+    try:
+        tags, txt = split_into_tags_and_doc(tweet)
+        res_array = model.predict_proba([txt])
+    except Exception as e:
+        return logged_error_response(
+            "Error during inference: " + repr(e) + traceback.format_exc(), status_code=500
         )
+
+    logging.info(f"Inference successful, result: class={res_array[0]}")
+    return func.HttpResponse(
+        body=json.dumps(
+            dict(
+                tags=[] if not tags else tags.split("|"),
+                text=txt,
+                label=int(res_array[0, 1] >= threshold),
+                score=res_array[0, 1],
+                original=tweet,
+                version=VERSION,
+            )
+        ),
+        mimetype="application/json",
+        status_code=200,
+    )
