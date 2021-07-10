@@ -10,8 +10,8 @@ import pandas as pd
 from pathlib import Path
 
 working_dir = Path("c:\\Users\\lpesch\\Downloads")
-input_file = "TweetTable.csv"
-output_file = "tweets.xlsx"
+input_file = "TweetTable2.csv"
+output_file = "tweets2x.xlsx"
 
 df = pd.read_csv(working_dir / input_file)
 
