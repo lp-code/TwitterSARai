@@ -4,8 +4,8 @@ stages:
     cmd: python src/data/make_dataset.py
     deps:
     - path: data/raw/vicinitas_user_tweets_vest_scoring_layout.xlsx
-      md5: af2a6f52db9261e67e1d47fea4ba96bc
-      size: 2445767
+      md5: eecef894e1f19aa6eb08cba94423fb38
+      size: 2445773
     - path: src/data/data_utils.py
       md5: 309819fb41c9b296bdcd9266ce60e3a5
       size: 542
@@ -14,14 +14,14 @@ stages:
       size: 2187
     outs:
     - path: data/processed
-      md5: 09e67c2dd297faacde946ce3c8dd67ac.dir
+      md5: 0cbe99abb51885dd85a3d99bcbb388d6.dir
       size: 290168
       nfiles: 1
   train:
     cmd: python src/models/train_model.py
     deps:
     - path: data/processed
-      md5: 09e67c2dd297faacde946ce3c8dd67ac.dir
+      md5: 0cbe99abb51885dd85a3d99bcbb388d6.dir
       size: 290168
       nfiles: 1
     - path: src/models/model_utils.py
@@ -32,8 +32,8 @@ stages:
       size: 7571
     outs:
     - path: metrics.json
-      md5: 0f3d52e99ca16ea4e8fe0029a1f599be
-      size: 63
+      md5: 45ca15ccfa29cd6e3ecca30fa4545fcf
+      size: 62
     - path: models/model.joblib
-      md5: c154ed147251e9cd5a0f7260e259f7fd
+      md5: 3dc7e74d66d41613b6abdd91565121ff
       size: 93087
