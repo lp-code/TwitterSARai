@@ -16,7 +16,7 @@ Click==7.0
 colorama==0.4.3
 commonmark==0.9.1
 configobj==5.0.6
-cryptography==2.8
+cryptography==3.3.2
 cycler==0.10.0
 decorator==4.4.2
 dictdiffer==0.8.1
