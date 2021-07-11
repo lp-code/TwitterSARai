@@ -1,0 +1,20 @@
+stages:
+  prepare:
+    cmd: python src/data/make_dataset.py
+    deps:
+    - data/raw/vicinitas_user_tweets_vest_scoring_layout.xlsx
+    - src/data/data_utils.py
+    - src/data/make_dataset.py
+    outs:
+    - data/processed
+  train:
+    cmd: python src/models/train_model.py
+    deps:
+    - data/processed
+    - src/models/model_utils.py
+    - src/models/train_model.py
+    outs:
+    - models/model.joblib
+    metrics:
+    - metrics.json:
+        cache: false

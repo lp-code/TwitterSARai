@@ -88,3 +88,4 @@ target/
 
 grid_search_results*.pck
 roc.svg
+/metrics.json
