@@ -1,4 +1,11 @@
 # Run the function locally OR deploy it to the Azure Function whose name is passed.
+#
+# The Azure function core tools (or the Linux consumption plan) does not seem to
+# support publishing to slots, even though they can be created in the portal.
+# It is not described anywhere how to do it, and copying from one slot to another
+# is not implemented either. So the only choice is to overwrite straight into
+# the only (production) slot.
+
 param (
     [string]$target = "localhost"
 )
