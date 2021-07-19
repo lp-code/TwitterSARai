@@ -18,6 +18,7 @@ from sklearn.base import BaseEstimator
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 from sklearn.svm import LinearSVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import BernoulliNB, ComplementNB, MultinomialNB
 from sklearn.linear_model import SGDClassifier
 
@@ -111,22 +112,18 @@ def main(input_filepath, output_filepath):
         "prep__remove_stopwords": [True],  # all winning ones have this
         "prep__stem": [True],
         "vect": [CountVectorizer(), TfidfVectorizer(max_df=0.95)],
-        "vect__ngram_range": [(1, 1)],# (1, 2)],  # unigrams or bigrams
+        "vect__ngram_range": [(1, 1), (1, 2)],  # unigrams or bigrams
         "vect__min_df": [3, 5],  # all winning ones have 1 (kind of obvious...)
         "clf__estimator": [
             # LinearSVC(C=1000),  # has no predict_proba function
             # MultinomialNB(alpha=0.01),
-            # MultinomialNB(alpha=0.1),
-            MultinomialNB(alpha=1),  # winning ones mostly have this
+            # MultinomialNB(alpha=1),  # winning ones mostly have this
             # BernoulliNB(alpha=xxx), none of these were successful
-            #ComplementNB(alpha=0.1),
-            ComplementNB(alpha=1),
-            #ComplementNB(alpha=10),  # new
-            #ComplementNB(alpha=100),  # new
+            ComplementNB(alpha=0.1, norm=False),  # best ComplementNB
             #SGDClassifier(alpha=1e-3, random_state=42, max_iter = 50, loss="log"),
             #SGDClassifier(alpha=1e-3, random_state=42, max_iter=150, loss="log"),
         ],
-        "clf__threshold": np.arange(0.03, 0.035, 0.1),
+        "clf__threshold": np.arange(0.03, 0.05, 0.002),
     }
     grid_search = GridSearchCV(pipeline, parameters, scoring="f1", n_jobs=-1, verbose=1)
     grid_search.fit(docs_train, y_train)
