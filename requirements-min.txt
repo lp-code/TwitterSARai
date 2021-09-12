@@ -1,0 +1,11 @@
+﻿azure-functions
+Click
+python-dotenv
+joblib==1.0.1
+matplotlib
+nltk==3.6.2
+numpy
+openpyxl
+pandas
+scikit-learn==0.24.2
+scipy
