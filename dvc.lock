@@ -35,5 +35,5 @@ stages:
       md5: 9a1defd4aefd6d1f6b17439f2939e140
       size: 63
     - path: models/model.joblib
-      md5: fe4a1bfe7ebb50b63e8d6aed68b67a84
-      size: 336347
+      md5: dae31fe75f5d8b24dae07ee74f7c1517
+      size: 310992
