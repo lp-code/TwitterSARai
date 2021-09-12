@@ -9,7 +9,7 @@ project:
 ![TwitterSAR architecture](docs/twittersar_architecture.png)
 
 AzTwitterSAR does timer-based querying of the Twitter API for new tweets from the
-relevant account. It also does it's own keyword-based assessment of the tweets,
+relevant account. It also does its own keyword-based assessment of the tweets,
 which results in many false positives. This is where TwitterSARai comes in: based
 on the AzTwitterSAR-preselected tweets, TwitterSARai implements a machine-learning
 model that filters the tweets more narrowly, so that only actually interesting ones
@@ -42,7 +42,6 @@ Deployment
 TwitterSARai is deployed as an Azure Function. Since a Function App can only host
 Functions of a single programming language, TwitterSARai lives in its own app rather
 than together with AzTwitterSAR. 
-Typical usage of the classifier is covered by the free tier for Functions.
 
 Project Organization
 ------------
