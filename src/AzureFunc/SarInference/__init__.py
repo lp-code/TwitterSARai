@@ -11,7 +11,7 @@ import azure.functions as func
 from .data_utils import split_into_tags_and_doc
 
 
-VERSION = "20210719.1"
+VERSION = "20210912.1"
 THRESHOLD_DEFAULT = 0.048
 
 def logged_error_response(msg: str, status_code: int) -> func.HttpResponse:
