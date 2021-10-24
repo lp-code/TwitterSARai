@@ -4,7 +4,7 @@ dvc
 python-dotenv
 joblib==1.0.1
 matplotlib
-nltk==3.6.2
+nltk==3.6.5
 numpy
 openpyxl
 pandas
