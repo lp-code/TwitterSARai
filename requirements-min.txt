@@ -2,7 +2,7 @@
 Click
 dvc
 python-dotenv
-joblib==1.0.1
+joblib==1.2.0
 matplotlib
 nltk==3.6.6
 numpy
