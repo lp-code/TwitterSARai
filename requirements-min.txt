@@ -10,3 +10,4 @@ openpyxl
 pandas
 scikit-learn==0.24.2
 scipy
+setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
