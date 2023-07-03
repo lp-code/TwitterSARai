@@ -52,7 +52,7 @@ pyasn1==0.4.8
 pycparser==2.20
 pydot==1.4.2
 pygit2==1.6.1
-Pygments==2.10.0
+Pygments==2.15.0
 pygtrie==2.4.2
 pyparsing==2.4.7
 python-benedict==0.24.2
