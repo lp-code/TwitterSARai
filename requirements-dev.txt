@@ -1,4 +1,4 @@
-aiohttp==3.7.4.post0
+aiohttp==3.8.5
 aiohttp-retry==2.4.5
 appdirs==1.4.4
 async-timeout==3.0.1
@@ -69,7 +69,7 @@ rich==10.9.0
 ruamel.yaml==0.17.16
 ruamel.yaml.clib==0.2.6
 scikit-learn==0.24.2
-scipy==1.10.0rc1
+scipy==1.10.0
 shortuuid==1.0.1
 shtab==1.4.1
 six==1.16.0
