@@ -8,7 +8,7 @@ nltk==3.8.1
 numpy
 openpyxl
 pandas
-scikit-learn==0.24.2
+scikit-learn==1.0.1
 scipy
 setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
 pillow>=10.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
