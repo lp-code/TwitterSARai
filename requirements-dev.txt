@@ -80,7 +80,7 @@ threadpoolctl==2.2.0
 toml==0.10.2
 tqdm==4.66.3
 typing-extensions==3.10.0.2
-urllib3==1.26.18
+urllib3==1.26.19
 voluptuous==0.12.1
 wcwidth==0.2.5
 win-unicode-console==0.5
